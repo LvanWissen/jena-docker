@@ -22,7 +22,7 @@ ENV LANG C.UTF-8
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-       bash curl ca-certificates findutils coreutils \
+    bash curl ca-certificates findutils coreutils \
     ; \
     rm -rf /var/lib/apt/lists/*
 
@@ -30,8 +30,8 @@ RUN set -eux; \
 
 # Update below according to https://jena.apache.org/download/ 
 # and checksum for apache-jena-3.x.x.tar.gz.sha512
-ENV JENA_SHA512 ba2e966df3ff2c8727b02f95771aa9f9953687fadbd51a95fff3709bb342ca64c1ac54bc25c9e24432b038c14737979c48fad5885e5841d6c15cc4967859b037
-ENV JENA_VERSION 3.14.0
+ENV JENA_SHA512 17a4c172eb0dc22d1cec71c795c395041fa6dc32be1da8525368abf1e0da51aaaf414c1eca6687b20753d9b4413e0cdc927cff2d5821baedce5e75c762050358
+ENV JENA_VERSION 3.16.0
 # No need for https due to sha512 checksums below
 ENV ASF_MIRROR http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=
 ENV ASF_ARCHIVE http://archive.apache.org/dist/
@@ -51,12 +51,12 @@ WORKDIR /tmp
 RUN echo "$JENA_SHA512  jena.tar.gz" > jena.tar.gz.sha512
 # Download/check/unpack/move in one go (to reduce image size)
 RUN     (curl --location --silent --show-error --fail --retry-connrefused --retry 3 --output jena.tar.gz ${ASF_MIRROR}jena/binaries/apache-jena-$JENA_VERSION.tar.gz || \
-         curl --fail --silent --show-error --retry-connrefused --retry 3 --output jena.tar.gz $ASF_ARCHIVE/jena/binaries/apache-jena-$JENA_VERSION.tar.gz) && \
-	sha512sum -c jena.tar.gz.sha512 && \
-	tar zxf jena.tar.gz && \
-	mv apache-jena* /jena && \
-	rm jena.tar.gz* && \
-	cd /jena && rm -rf *javadoc* *src* bat
+    curl --fail --silent --show-error --retry-connrefused --retry 3 --output jena.tar.gz $ASF_ARCHIVE/jena/binaries/apache-jena-$JENA_VERSION.tar.gz) && \
+    sha512sum -c jena.tar.gz.sha512 && \
+    tar zxf jena.tar.gz && \
+    mv apache-jena* /jena && \
+    rm jena.tar.gz* && \
+    cd /jena && rm -rf *javadoc* *src* bat
 
 # Add to PATH
 ENV PATH $PATH:/jena/bin
